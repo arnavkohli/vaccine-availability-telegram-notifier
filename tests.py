@@ -3,6 +3,10 @@ import pytest
 from datetime import datetime
 from utils import TelegramBot, get_calendar_by_pin, generate_message
 
+'''
+	Environment Vars being referenced here are pulled from Github Secrets.
+'''
+
 @pytest.fixture
 def tester_chat_id():
 	return os.getenv("TELEGRAM_CHAT_ID")
