@@ -19,7 +19,11 @@ def run(telegram_bot_key, mongo_conn_url, database, users_collection, groups_col
 		pincode = group.get('pincode')
 		print (f"[Scheduler] Pincode: {pincode}")
 		data = get_calendar_by_pin(pincode, today)
-		chat_ids = [db.search(collection=users_collection, filters={"_id" : user_id}).get('chat_id') for user_id in group.get('user_ids')]
+		try:
+			chat_ids = [db.search(collection=users_collection, filters={"_id" : user_id}).get('chat_id') for user_id in group.get('user_ids')]
+		except:
+			print (f"[Scheduler] No user_ids found for pincode {pincode}. Skipping...")
+			continue
 		print (f"[Scheduler] Data: {data}")
 		if data.get("success", None) and data.get("centers", None) != None:
 			print (f"[Scheduler] SLOTS FOUND for {pincode} !!!")

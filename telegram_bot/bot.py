@@ -67,9 +67,9 @@ def addPincode(update, context):
 
     data = insert_update_request(first_name, last_name, telegram_user_id, telegram_username, chat_id, pincodes)
     print ("data", data)
-    user_data = data.get('user_data').replace("null", "None")
-    print ("user_data", eval(user_data))
     if data:
+        user_data = data.get('user_data').replace("null", "None")
+        print ("user_data", eval(user_data))
         pincodes = eval(user_data).get('pincodes')
         print ("pincodes", pincodes)
         if not pincodes or pincodes == "null":
@@ -94,9 +94,8 @@ def removePincode(update, context):
 
     data = delete_request(telegram_user_id, pincodes)
 
-    user_data = data.get('user_data').replace("null", "None")
-
     if data:
+        user_data = data.get('user_data').replace("null", "None")
         pincodes = eval(user_data).get('pincodes')
         if not pincodes or pincodes == 'null':
             update.message.reply_text(f"You have not added any pincodes!")
@@ -119,10 +118,12 @@ def listPincodes(update, context):
     chat_id = update.message.chat.id
 
     data = list_request(telegram_user_id)
-
-    user_data = data.get('user_data').replace("null", "None")
-    if user_data and user_data != 'null':
-        pincodes = eval(user_data).get('pincodes')
+    print ("data", data)
+    if data and data != 'null':
+        user_data = eval(data.get("user"))
+        print ("user_data", user_data)
+        pincodes = user_data.get('pincodes')
+        print ("pincodes", pincodes)
         if not pincodes or pincodes == 'null':
             update.message.reply_text(f"You have not added any pincodes!")
         else:
@@ -138,7 +139,7 @@ def help(update, context):
     telegram_username = update.message.from_user.username
 
     print (f"[BOT] /help Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
-    message = '''Hey! Im the COVID19VANBot (India).\n Pipelines are currently down but you can still register and will be opted for receiving notifications whenever they are back up!\n\nCommands:\n/add    <PINCODE> - Add a pincode to track.\n\n/remove <PINCODE> - Stop tracking a pincode.\n\n/list             - List all actively tracking pincodes.'''
+    message = '''Hey! Im the COVID19VANBot (India).\nWe are in beta. Scheduler is scheduled to run at 10AM IST and 4PM IST.\n\nCommands:\n/add <PINCODE> - Add a pincode to track.\n\n/remove <PINCODE> - Stop tracking a pincode.\n\n/list - List all actively tracking pincodes.'''
     update.message.reply_text(message)
 
 def echo(update, context):
