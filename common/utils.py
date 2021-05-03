@@ -31,12 +31,16 @@ def generate_message(data: dict):
 	message = ""
 	centers = data.get("centers")
 	for center in centers:
+		available = False
 		message += f"Pincode: {center.get('pincode')}\n"
 		message += f"Centre Name: {center.get('name')}\n"
 		message += f"From: {center.get('from')}\n"
 		message += f"To: {center.get('to')}\n\n"
 
 		for index, session in enumerate(center.get('sessions', [])):
+			if session.get('available_capacity') == 0:
+				continue
+			available = True
 			if index == 0:
 				message += f"Sessions/ Slots: \n"
 			message += f"Min Age Limit: {session.get('min_age_limit')}\n"
@@ -44,4 +48,6 @@ def generate_message(data: dict):
 			message += f"Vaccine: {session.get('vaccine')}\n"
 			message += f"Slots Available In: {', '.join(session.get('slots'))}\n"
 
+		if not available:
+			message += f"No slots found for {center.get('pincode')}!\n"
 	return message.strip()

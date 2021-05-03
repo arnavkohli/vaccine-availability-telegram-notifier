@@ -49,7 +49,7 @@ def list_request(telegram_id):
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
 def addPincode(update, context):
-    """Send a message when the command /start is issued."""
+    """Send a message when the command /add is issued."""
    
     first_name = update.message.from_user.first_name
     last_name = update.message.from_user.last_name
@@ -75,14 +75,14 @@ def addPincode(update, context):
         update.message.reply_text(f"There was an error!")
 
 def removePincode(update, context):
-    """Send a message when the command /start is issued."""
+    """Send a message when the command /remove is issued."""
    
     first_name = update.message.from_user.first_name
     last_name = update.message.from_user.last_name
     telegram_user_id = update.message.from_user.id
     telegram_username = update.message.from_user.username
 
-    print (f"[BOT] /addPincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
+    print (f"[BOT] /removePincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
     text = update.message.text
     pincodes = text.split(" ")[1:]
     chat_id = update.message.chat.id
@@ -101,14 +101,14 @@ def removePincode(update, context):
         update.message.reply_text(f"There was an error!")
 
 def listPincodes(update, context):
-    """Send a message when the command /start is issued."""
+    """Send a message when the command /list is issued."""
    
     first_name = update.message.from_user.first_name
     last_name = update.message.from_user.last_name
     telegram_user_id = update.message.from_user.id
     telegram_username = update.message.from_user.username
 
-    print (f"[BOT] /addPincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
+    print (f"[BOT] /listPincodes Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
     text = update.message.text
     pincodes = text.split(" ")[1:]
     chat_id = update.message.chat.id
@@ -132,7 +132,7 @@ def help(update, context):
     telegram_user_id = update.message.from_user.id
     telegram_username = update.message.from_user.username
 
-    print (f"[BOT] /addPincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
+    print (f"[BOT] /help Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
     message = '''Hey! Im the COVID19VANBot (India).\n Pipelines are currently down but you can still register and will be opted for receiving notifications whenever they are back up!\n\nCommands:\n/add    <PINCODE> - Add a pincode to track.\n\n/remove <PINCODE> - Stop tracking a pincode.\n\n/list             - List all actively tracking pincodes.'''
     update.message.reply_text(message)
 

@@ -24,11 +24,10 @@ def run(telegram_bot_key, mongo_conn_url, database, users_collection, groups_col
 		if data.get("success", None) and data.get("centers", None) != None:
 			print (f"[Scheduler] SLOTS FOUND for {pincode} !!!")
 			message = generate_message(data)
-			for chat_id in chat_ids:
-				print (f"[Scheduler] --- Sending message to Chat ID: {chat_id}")
-				tb.send_message(message, chat_id)
 		else:
 			print (f"[Scheduler] No slots found for {pincode}")
-			for chat_id in chat_ids:
-				print (f"[Scheduler] --- Sending message to Chat ID: {chat_id}")
-				tb.send_message(message, chat_id)
+			message = f"No slots found for {pincode}!"
+
+		for chat_id in chat_ids:
+			print (f"[Scheduler] --- Sending message to Chat ID: {chat_id}; Message: {message}")
+			tb.send_message(message, chat_id)
