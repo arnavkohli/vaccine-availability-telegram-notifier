@@ -11,6 +11,10 @@ jobs:
     env:
       TELEGRAM_BOT_KEY: ${{ secrets.TELEGRAM_BOT_KEY }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MONGO_CONN_URL: ${{ secrets.MONGO_CONN_URL }}
+      DATABASE: ${{ secrets.DATABASE }}
+      USER_COLLECTION: ${{ secrets.USER_COLLECTION }}
+      GROUPS_COLLECTION: ${{ secrets.GROUPS_COLLECTION }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -30,6 +34,9 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+    - name: Test common module
       run: |
-        pytest tests.py
+        pytest common/tests.py
+    - name: Test svc module
+      run: |
+        pytest svc/tests.py

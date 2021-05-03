@@ -15,6 +15,8 @@ class TelegramBot:
 		request = requests.post(url, data=data)
 		if request.status_code == 200:
 			return True
+		print (request.content)
+		print (url)
 		return False
 
 def get_calendar_by_pin(pincode: int, date: str) -> dict:

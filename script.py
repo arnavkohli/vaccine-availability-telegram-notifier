@@ -1,7 +1,7 @@
 import os
 import argparse
 from datetime import datetime
-from utils import TelegramBot, get_calendar_by_pin, generate_message
+from common.utils import TelegramBot, get_calendar_by_pin, generate_message
 
 def check_if_env_vars_loaded(names):
 	return [name for name in names if not os.getenv(name)]
