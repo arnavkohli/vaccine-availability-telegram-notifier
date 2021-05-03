@@ -5,11 +5,16 @@
 </p>
 
 <p align="center">
-    With the initiation of the COVID vaccination drive across India for all individuals above the age of 18, I wrote a simple vaccine notifier script which alerts the user regarding open slots in the vicinity, via Telegram.
+    With the initiation of the COVID vaccination drive across India for all individuals above the age of 18, I wrote a telegram bot which alerts the user regarding open slots in the vicinity, via Telegram.
+ </p>
+ 
+ <p align="center">
+    <a href="https://t.me/KohlGuysBot">Check it out!</a>
  </p>
 
+## Script Setup
 
-## Setup
+You can also run the local script with your own configurations.
 
 ### Clone this Repository
 ```
