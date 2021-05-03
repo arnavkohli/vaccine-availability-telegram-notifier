@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    With the initiation of the COVID vaccination drive across India for all individuals above the age of 18, I wrote a telegram bot which alerts the user regarding open slots in the vicinity, via Telegram.
+    With the initiation of the COVID vaccination drive across India for all individuals above the age of 18, I wrote a telegram bot which alerts the user regarding open slots in the vicinity!
  </p>
  
  <p align="center">
