@@ -42,13 +42,3 @@ Following variables are expected to be set in the environment before running the
 TELEGRAM_BOT_KEY
 TELEGRAM_CHAT_ID
 ```
-
-### Run tests
-```
-pytest tests.py
-```
-
-<p align="center">
-  <img src="https://github.com/arnavkohli/vaccine-availability-telegram-notifier/blob/master/screenshot.png" /><br>
-  <em>Sample Notification</em>
-</p>
