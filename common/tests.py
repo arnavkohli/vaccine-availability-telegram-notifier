@@ -60,6 +60,7 @@ def dummy_generate_message_response():
 
 def test_get_calendar_by_pin():
 	data = get_calendar_by_pin(pincode=411021, date=datetime.strftime(datetime.now(), "%d-%m-%Y"))
+	print ("data", data)
 	is_success = data.get("success", False)
 	assert is_success == True
 
