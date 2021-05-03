@@ -60,7 +60,8 @@ def dummy_generate_message_response():
 
 def test_get_calendar_by_pin():
 	data = get_calendar_by_pin(pincode=411021, date=datetime.strftime(datetime.now(), "%d-%m-%Y"))
-	assert data.get("success") == True
+	is_success = data.get("success", False)
+	assert is_success == True
 
 def test_telegram_bot(dummy_generate_message_response, tester_chat_id):
 	tb = TelegramBot(os.getenv("TELEGRAM_BOT_KEY"))
