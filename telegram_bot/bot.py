@@ -26,6 +26,7 @@ def insert_update_request(first_name, last_name, telegram_id, telegram_username,
         "chat_id" : chat_id
     }
     response = requests.post(url, json=data)
+    print ("response from api", response.json())
     return response.json()
 
 def delete_request(telegram_id, pincodes):
@@ -58,16 +59,20 @@ def addPincode(update, context):
 
     print (f"[BOT] /addPincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
     text = update.message.text
+    print ("text", text)
     pincodes = text.split(" ")[1:]
+    print ("pincodes", pincodes)
     chat_id = update.message.chat.id
+    print ("chat_id", chat_id)
 
     data = insert_update_request(first_name, last_name, telegram_user_id, telegram_username, chat_id, pincodes)
-
-    user_data = data.get('user_data')
-
+    print ("data", data)
+    user_data = data.get('user_data').replace("null", "None")
+    print ("user_data", eval(user_data))
     if data:
         pincodes = eval(user_data).get('pincodes')
-        if not pincodes or pincodes == 'null':
+        print ("pincodes", pincodes)
+        if not pincodes or pincodes == "null":
             update.message.reply_text(f"You have not added any pincodes!")
         else:
             update.message.reply_text(f"Actively Tracking Pincodes: {', '.join(pincodes)}")
@@ -89,7 +94,7 @@ def removePincode(update, context):
 
     data = delete_request(telegram_user_id, pincodes)
 
-    user_data = data.get('user_data')
+    user_data = data.get('user_data').replace("null", "None")
 
     if data:
         pincodes = eval(user_data).get('pincodes')
@@ -115,7 +120,7 @@ def listPincodes(update, context):
 
     data = list_request(telegram_user_id)
 
-    user_data = data.get('user')
+    user_data = data.get('user_data').replace("null", "None")
     if user_data and user_data != 'null':
         pincodes = eval(user_data).get('pincodes')
         if not pincodes or pincodes == 'null':
