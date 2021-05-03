@@ -20,7 +20,7 @@ class TelegramBot:
 def get_calendar_by_pin(pincode: int, date: str) -> dict:
 	url = f"https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode={pincode}&date={date}"
 	request = requests.get(url)
-
+	print ("api setu response", request.content)
 	if request.status_code == 200:
 		data = request.json()
 		data['success'] = True
