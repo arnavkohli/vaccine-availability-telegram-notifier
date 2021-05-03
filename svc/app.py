@@ -33,7 +33,7 @@ def pincode_group_delete_user(db, pincodes, user_id):
 def remove_pincode():
 	data = request.json
 	accepted_fields = [
-		"telegram_username",
+		"telegram_id",
 		"pincodes"
 	]
 
@@ -53,7 +53,7 @@ def remove_pincode():
 
 	if db:
 		# Check if user already exists
-		existing_user = db.search(collection=users_collection, filters={"telegram_username" : data.get('telegram_username')})
+		existing_user = db.search(collection=users_collection, filters={"telegram_id" : data.get('telegram_id')})
 		if existing_user and existing_user != 'null':
 			# Update the pincodes
 			current_pincodes = existing_user.get('pincodes')
@@ -62,13 +62,13 @@ def remove_pincode():
 				pincodes_to_update = list(set(current_pincodes) - (set(pincodes_to_delete)))
 
 		
-				db.update(collection=users_collection, filter={"telegram_username" : data.get('telegram_username')}, record={ "$set": {"pincodes" : pincodes_to_update} })
+				db.update(collection=users_collection, filter={"telegram_id" : data.get('telegram_id')}, record={ "$set": {"pincodes" : pincodes_to_update} })
 
 			user_data = pincode_group_delete_user(db, data.get('pincodes'), existing_user.get("_id"))
 
 			return jsonify({"success" : True, "msg" : "You are an existing user, pincodes have been updated.", "user_data" : dumps(user_data)}), 200
 
-		return jsonify({"success" : False, "msg" : f"User {data.get('telegram_username')} does not exist."}), 400
+		return jsonify({"success" : False, "msg" : f"User {data.get('telegram_id')} does not exist."}), 400
 
 def pincode_group_add_or_update_user(db, pincodes, user_id):
 	user_id = ObjectId(user_id)
@@ -94,7 +94,10 @@ def pincode_group_add_or_update_user(db, pincodes, user_id):
 def add_pincode():
 	data = request.json
 	accepted_fields = [
+		"first_name",
+		"last_name",
 		"telegram_username",
+		"telegram_id",
 		"pincodes",
 		"chat_id"
 	]
@@ -115,7 +118,7 @@ def add_pincode():
 
 	if db:
 		# Check if user already exists
-		existing_user = db.search(collection=users_collection, filters={"telegram_username" : data.get('telegram_username')})
+		existing_user = db.search(collection=users_collection, filters={"telegram_id" : data.get('telegram_id')})
 		if existing_user and existing_user != 'null':
 			# Update the pincodes
 			current_pincodes = existing_user.get('pincodes')
@@ -123,7 +126,7 @@ def add_pincode():
 			if current_pincodes and current_pincodes != 'null':
 				pincodes_to_update = list(set(current_pincodes).union(set(pincodes_to_update)))
 
-			db.update(collection=users_collection, filter={"telegram_username" : data.get('telegram_username')}, record={ "$set": {"pincodes" : pincodes_to_update} })
+			db.update(collection=users_collection, filter={"telegram_id" : data.get('telegram_id')}, record={ "$set": {"pincodes" : pincodes_to_update} })
 
 			user_data = pincode_group_add_or_update_user(db, data.get('pincodes'), existing_user.get("_id"))
 
@@ -140,7 +143,7 @@ def add_pincode():
 def user():
 	data = request.json
 	accepted_fields = [
-		"telegram_username"
+		"telegram_id"
 	]
 
 	unexpected_fields = []
@@ -155,7 +158,7 @@ def user():
 	if unexpected_fields or accepted_fields:
 		return jsonify({"success" : False, "unexpected_fields" : unexpected_fields, "missing_fields" : accepted_fields}), 400
 
-	user_data = db.search(collection=users_collection, filters={"telegram_username" : data.get('telegram_username')})
+	user_data = db.search(collection=users_collection, filters={"telegram_id" : data.get('telegram_id')})
 	return jsonify({"success" : True, "user" : dumps(user_data)}) 
 
 if __name__ == '__main__':

@@ -15,9 +15,12 @@ REGISTRATION_API = os.getenv('REGISTRATION_API')
 CURRENT_DOMAIN = os.getenv('CURRENT_DOMAIN')
 
 
-def insert_update_request(telegram_username, chat_id, pincodes):
+def insert_update_request(first_name, last_name, telegram_id, telegram_username, chat_id, pincodes):
     url = REGISTRATION_API + "addPincode"
     data = {
+        "first_name" : first_name,
+        "last_name" : last_name,
+        "telegram_id" : telegram_id,
         "telegram_username" : telegram_username,
         "pincodes" : pincodes,
         "chat_id" : chat_id
@@ -25,19 +28,19 @@ def insert_update_request(telegram_username, chat_id, pincodes):
     response = requests.post(url, json=data)
     return response.json()
 
-def delete_request(telegram_username, pincodes):
+def delete_request(telegram_id, pincodes):
     url = REGISTRATION_API + "removePincode"
     data = {
-        "telegram_username" : telegram_username,
+        "telegram_id" : telegram_id,
         "pincodes" : pincodes
     }
     response = requests.post(url, json=data)
     return response.json()
 
-def list_request(telegram_username):
+def list_request(telegram_id):
     url = REGISTRATION_API + "findUser"
     data = {
-        "telegram_username" : telegram_username
+        "telegram_id" : telegram_id
     }
     response = requests.post(url, json=data)
     return response.json()
@@ -48,13 +51,17 @@ def list_request(telegram_username):
 def addPincode(update, context):
     """Send a message when the command /start is issued."""
    
-    username = update.message.from_user.id
-    print (f"[BOT] /addPincode Request from {username}")
+    first_name = update.message.from_user.first_name
+    last_name = update.message.from_user.last_name
+    telegram_user_id = update.message.from_user.id
+    telegram_username = update.message.from_user.username
+
+    print (f"[BOT] /addPincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
     text = update.message.text
     pincodes = text.split(" ")[1:]
     chat_id = update.message.chat.id
 
-    data = insert_update_request(username, chat_id, pincodes)
+    data = insert_update_request(first_name, last_name, telegram_user_id, telegram_username, chat_id, pincodes)
 
     user_data = data.get('user_data')
 
@@ -70,13 +77,17 @@ def addPincode(update, context):
 def removePincode(update, context):
     """Send a message when the command /start is issued."""
    
-    username = update.message.from_user.id
-    print (f"[BOT] /removePincode Request from {username}")
+    first_name = update.message.from_user.first_name
+    last_name = update.message.from_user.last_name
+    telegram_user_id = update.message.from_user.id
+    telegram_username = update.message.from_user.username
+
+    print (f"[BOT] /addPincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
     text = update.message.text
     pincodes = text.split(" ")[1:]
     chat_id = update.message.chat.id
 
-    data = delete_request(username, pincodes)
+    data = delete_request(telegram_user_id, pincodes)
 
     user_data = data.get('user_data')
 
@@ -92,13 +103,17 @@ def removePincode(update, context):
 def listPincodes(update, context):
     """Send a message when the command /start is issued."""
    
-    username = update.message.from_user.id
-    print (f"[BOT] /listPincodes Request from {username}")
+    first_name = update.message.from_user.first_name
+    last_name = update.message.from_user.last_name
+    telegram_user_id = update.message.from_user.id
+    telegram_username = update.message.from_user.username
+
+    print (f"[BOT] /addPincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
     text = update.message.text
     pincodes = text.split(" ")[1:]
     chat_id = update.message.chat.id
 
-    data = list_request(username)
+    data = list_request(telegram_user_id)
 
     user_data = data.get('user')
     if user_data and user_data != 'null':
@@ -112,14 +127,13 @@ def listPincodes(update, context):
 
 def help(update, context):
     """Send a message when the command /help is issued."""
-    username = update.message.from_user.id
-    print (f"[BOT] /help Request from {username}")
-    message = '''Hey! Im the COVID19VANBot (India). Pipelines are currently down but you can still register and will opted for notifications whenever they are back up!\n
-    Commands:\n
-    1. /add <PINCODE>\n
-    2. /remove <PINCODE>\n
-    3. /list
-    '''
+    first_name = update.message.from_user.first_name
+    last_name = update.message.from_user.last_name
+    telegram_user_id = update.message.from_user.id
+    telegram_username = update.message.from_user.username
+
+    print (f"[BOT] /addPincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
+    message = '''Hey! Im the COVID19VANBot (India).\n Pipelines are currently down but you can still register and will be opted for receiving notifications whenever they are back up!\n\nCommands:\n/add    <PINCODE> - Add a pincode to track.\n\n/remove <PINCODE> - Stop tracking a pincode.\n\n/list             - List all actively tracking pincodes.'''
     update.message.reply_text(message)
 
 def echo(update, context):
