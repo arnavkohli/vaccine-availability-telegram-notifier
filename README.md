@@ -12,6 +12,13 @@
     <a href="https://t.me/KohlGuysBot">Check it out!</a>
  </p>
 
+## Project Overview
+
+- *svc* - Registration API
+- *telegram_bot* - Telegram Bot code.
+- *lambda_function.py* - Scheduler code for the AWS Lambda function.
+- *script.py* - Script to run the notifier once.
+
 ## Script Setup
 
 You can also run the local script with your own configurations.
