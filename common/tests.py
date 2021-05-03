@@ -58,16 +58,16 @@ def dummy_get_calendar_by_pin_response():
 def dummy_generate_message_response():
 	return '''Pincode: 413608\nCentre Name: District General Hostpital\nFrom: 09:00:00\nTo: 18:00:00\n\nSessions/ Slots: \nMax Age Limit: 18\nAvailable Capacity: 50\nVaccine: COVISHIELD\nSlots Available In: FORENOON, AFTERNOON'''
 
-def test_get_calendar_by_pin():
-	data = get_calendar_by_pin(pincode=411021, date=datetime.strftime(datetime.now(), "%d-%m-%Y"))
-	print ("data", data)
-	is_success = data.get("success", False)
-	assert is_success == True
-
 def test_telegram_bot(dummy_generate_message_response, tester_chat_id):
 	tb = TelegramBot(os.getenv("TELEGRAM_BOT_KEY"))
 	chat_id = tester_chat_id
 	assert tb.send_message(dummy_generate_message_response, chat_id=chat_id) == True
+
+# def test_get_calendar_by_pin():
+# 	data = get_calendar_by_pin(pincode=411021, date=datetime.strftime(datetime.now(), "%d-%m-%Y"))
+# 	print ("data", data)
+# 	is_success = data.get("success", False)
+# 	assert is_success == True
 
 # def test_generate_message(dummy_get_calendar_by_pin_response):
 # 	message = generate_message(dummy_get_calendar_by_pin_response)
