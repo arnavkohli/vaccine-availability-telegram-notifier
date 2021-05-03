@@ -19,12 +19,16 @@ def run(telegram_bot_key, mongo_conn_url, database, users_collection, groups_col
 		pincode = group.get('pincode')
 		print (f"[Scheduler] Pincode: {pincode}")
 		data = get_calendar_by_pin(pincode, today)
-
+		chat_ids = [db.search(collection=users_collection, filters={"_id" : user_id}).get('chat_id') for user_id in group.get('user_ids')]
+		print (f"[Scheduler] Data: {data}")
 		if data.get("success", None) and data.get("centers", None) != None:
+			print (f"[Scheduler] SLOTS FOUND for {pincode} !!!")
 			message = generate_message(data)
-			
-			chat_ids = [db.search(collection=users_collection, filters={"_id" : user_id}).get('chat_id') for user_id in group.get('user_ids')]
-
+			for chat_id in chat_ids:
+				print (f"[Scheduler] --- Sending message to Chat ID: {chat_id}")
+				tb.send_message(message, chat_id)
+		else:
+			print (f"[Scheduler] No slots found for {pincode}")
 			for chat_id in chat_ids:
 				print (f"[Scheduler] --- Sending message to Chat ID: {chat_id}")
 				tb.send_message(message, chat_id)

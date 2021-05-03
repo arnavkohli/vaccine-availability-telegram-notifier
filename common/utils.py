@@ -15,8 +15,6 @@ class TelegramBot:
 		request = requests.post(url, data=data)
 		if request.status_code == 200:
 			return True
-		print (request.content)
-		print (url)
 		return False
 
 def get_calendar_by_pin(pincode: int, date: str) -> dict:
@@ -41,6 +39,7 @@ def generate_message(data: dict):
 		for index, session in enumerate(center.get('sessions', [])):
 			if index == 0:
 				message += f"Sessions/ Slots: \n"
+			message += f"Min Age Limit: {session.get('min_age_limit')}\n"
 			message += f"Available Capacity: {session.get('available_capacity')}\n"
 			message += f"Vaccine: {session.get('vaccine')}\n"
 			message += f"Slots Available In: {', '.join(session.get('slots'))}\n"
