@@ -20,6 +20,8 @@ def pincode_group_delete_user(db, pincodes, user_id):
 	
 	for pincode in pincodes:
 		group = db.search(collection=groups_collection, filters={"pincode" : pincode})
+		if not group or group == 'null':
+			continue
 		current_user_ids = group.get('user_ids')
 		if not current_user_ids or current_user_ids == 'null':
 			current_user_ids = []
@@ -60,7 +62,6 @@ def remove_pincode():
 			pincodes_to_delete = data.get('pincodes')
 			if current_pincodes and current_pincodes != 'null':
 				pincodes_to_update = list(set(current_pincodes) - (set(pincodes_to_delete)))
-
 		
 				db.update(collection=users_collection, filter={"telegram_id" : data.get('telegram_id')}, record={ "$set": {"pincodes" : pincodes_to_update} })
 

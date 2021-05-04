@@ -1,6 +1,6 @@
 import logging, requests
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import os
+import os, re
 
 PORT = int(os.environ.get('PORT', 8443))
 
@@ -14,6 +14,11 @@ TOKEN = os.getenv('TELEGRAM_BOT_KEY')
 REGISTRATION_API = os.getenv('REGISTRATION_API')
 CURRENT_DOMAIN = os.getenv('CURRENT_DOMAIN')
 
+def is_valid_indian_pincode(pincode):
+    regex = "^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$"
+    pattern = re.compile(regex)
+    matches = re.match(pattern, pincode)
+    return False if matches == None else True
 
 def insert_update_request(first_name, last_name, telegram_id, telegram_username, chat_id, pincodes):
     url = REGISTRATION_API + "addPincode"
@@ -62,22 +67,27 @@ def addPincode(update, context):
     print ("text", text)
     pincodes = text.split(" ")[1:]
     print ("pincodes", pincodes)
-    chat_id = update.message.chat.id
-    print ("chat_id", chat_id)
 
-    data = insert_update_request(first_name, last_name, telegram_user_id, telegram_username, chat_id, pincodes)
-    print ("data", data)
-    if data:
-        user_data = data.get('user_data').replace("null", "None")
-        print ("user_data", eval(user_data))
-        pincodes = eval(user_data).get('pincodes')
-        print ("pincodes", pincodes)
-        if not pincodes or pincodes == "null":
-            update.message.reply_text(f"You have not added any pincodes!")
-        else:
-            update.message.reply_text(f"Actively Tracking Pincodes: {', '.join(pincodes)}")
+    # Check pincode validity
+    if not is_valid_indian_pincode(pincodes[0]):
+        update.message.reply_text(f"Invalid Pincode: {pincodes[0]}")
     else:
-        update.message.reply_text(f"There was an error!")
+        chat_id = update.message.chat.id
+        print ("chat_id", chat_id)
+
+        data = insert_update_request(first_name, last_name, telegram_user_id, telegram_username, chat_id, pincodes)
+        print ("data", data)
+        if data:
+            user_data = data.get('user_data').replace("null", "None")
+            print ("user_data", eval(user_data))
+            pincodes = eval(user_data).get('pincodes')
+            print ("pincodes", pincodes)
+            if not pincodes or pincodes == "null":
+                update.message.reply_text(f"You have not added any pincodes!")
+            else:
+                update.message.reply_text(f"Actively Tracking Pincodes: {', '.join(pincodes)}")
+        else:
+            update.message.reply_text(f"There was an error!")
 
 def removePincode(update, context):
     """Send a message when the command /remove is issued."""
@@ -90,19 +100,26 @@ def removePincode(update, context):
     print (f"[BOT] /removePincode Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
     text = update.message.text
     pincodes = text.split(" ")[1:]
-    chat_id = update.message.chat.id
-
-    data = delete_request(telegram_user_id, pincodes)
-
-    if data:
-        user_data = data.get('user_data').replace("null", "None")
-        pincodes = eval(user_data).get('pincodes')
-        if not pincodes or pincodes == 'null':
-            update.message.reply_text(f"You have not added any pincodes!")
-        else:
-            update.message.reply_text(f"Actively Tracking Pincodes: {', '.join(pincodes)}")
+    print ("pincodes", pincodes)
+    # Check pincode validity
+    if not is_valid_indian_pincode(pincodes[0]):
+        update.message.reply_text(f"Invalid Pincode: {pincodes[0]}")
     else:
-        update.message.reply_text(f"There was an error!")
+        chat_id = update.message.chat.id
+
+        data = delete_request(telegram_user_id, pincodes)
+        print ("data", data)
+        if data:
+            user_data = data.get('user_data').replace("null", "None")
+            print ("user_data", user_data)
+            pincodes = eval(user_data).get('pincodes')
+            print ("pincodes", pincodes)
+            if not pincodes or pincodes == 'null':
+                update.message.reply_text(f"You have not added any pincodes!")
+            else:
+                update.message.reply_text(f"Actively Tracking Pincodes: {', '.join(pincodes)}")
+        else:
+            update.message.reply_text(f"There was an error!")
 
 def listPincodes(update, context):
     """Send a message when the command /list is issued."""
@@ -120,7 +137,7 @@ def listPincodes(update, context):
     data = list_request(telegram_user_id)
     print ("data", data)
     if data and data != 'null':
-        user_data = eval(data.get("user"))
+        user_data = eval(data.get("user").replace("null", "None"))
         print ("user_data", user_data)
         pincodes = user_data.get('pincodes')
         print ("pincodes", pincodes)
@@ -139,7 +156,7 @@ def help(update, context):
     telegram_username = update.message.from_user.username
 
     print (f"[BOT] /help Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
-    message = '''Hey! Im the COVID19VANBot (India).\nWe are in beta. Scheduler is scheduled to run at 10AM IST and 4PM IST.\n\nCommands:\n/add <PINCODE> - Add a pincode to track.\n\n/remove <PINCODE> - Stop tracking a pincode.\n\n/list - List all actively tracking pincodes.'''
+    message = '''Hey! Im the COVID19VANBot (India).\nWe are in beta. Scheduler is scheduled to run at 10AM IST and 4PM IST.\n\nCommands:\n/add PINCODE - Add a pincode to track.\n\n/remove PINCODE - Stop tracking a pincode.\n\n/list - List all actively tracking pincodes.'''
     update.message.reply_text(message)
 
 def echo(update, context):

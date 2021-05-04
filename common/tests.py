@@ -1,7 +1,7 @@
 import os
 import pytest
 from datetime import datetime
-from .utils import TelegramBot, get_calendar_by_pin, generate_message
+from .utils import TelegramBot, get_calendar_by_pin, generate_message, is_valid_indian_pincode
 
 '''
 	Environment Vars being referenced here are pulled from Github Secrets.
@@ -62,6 +62,16 @@ def test_telegram_bot(dummy_generate_message_response, tester_chat_id):
 	tb = TelegramBot(os.getenv("TELEGRAM_BOT_KEY"))
 	chat_id = tester_chat_id
 	assert tb.send_message(dummy_generate_message_response, chat_id=chat_id) == True
+
+def test_valid_pincodes():
+	VALID_PINCODES = ["400053", "411021", "400101", "411233"]
+	for pincode in VALID_PINCODES:
+		assert True == is_valid_indian_pincode(pincode)
+
+def test_invalid_pincodes():
+	INVALID_PINCODES = ["412", "12344", "<400053>", "string"]
+	for pincode in INVALID_PINCODES:
+		assert False == is_valid_indian_pincode(pincode)
 
 # def test_get_calendar_by_pin():
 # 	data = get_calendar_by_pin(pincode=411021, date=datetime.strftime(datetime.now(), "%d-%m-%Y"))
