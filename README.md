@@ -2,6 +2,7 @@
 
 <p align="center">
   <img src="https://github.com/arnavkohli/vaccine-availability-telegram-notifier/actions/workflows/ci.yml/badge.svg" />
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=vaccine-availability-telegram-notifier" />
 </p>
 
 <p align="center">
