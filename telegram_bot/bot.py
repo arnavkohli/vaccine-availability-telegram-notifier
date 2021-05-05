@@ -195,8 +195,9 @@ def main():
                           url_path=TOKEN,
                           webhook_url=CURRENT_DOMAIN + TOKEN)
 
+
     # Local testing
-    # updater.start_polling()
+    #updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
