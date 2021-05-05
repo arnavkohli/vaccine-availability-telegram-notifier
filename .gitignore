@@ -3,5 +3,6 @@
 **/__pycache__/
 **/.pytest_cache/
 scheduler_run.py
+broadcaster_run.py
 package/
 van-aws-deployment.zip/
