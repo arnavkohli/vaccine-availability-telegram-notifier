@@ -156,7 +156,7 @@ def help(update, context):
     telegram_username = update.message.from_user.username
 
     print (f"[BOT] /help Request from (username: {telegram_username}; first_name: {first_name}; last_name: {last_name}; telegram_id: {telegram_user_id}) ")
-    message = '''Hey! Im the COVID19VANBot (India).\nWe are in beta. Scheduler is scheduled to run at 10AM IST and 4PM IST.\n\nCommands:\n/add PINCODE - Add a pincode to track.\n\n/remove PINCODE - Stop tracking a pincode.\n\n/list - List all actively tracking pincodes.'''
+    message = '''Hey! Im the COVID19VANBot (India).\nWe are in beta. Scheduler is scheduled to run at 7AM IST and 5PM IST.\n\nCommands:\n/add PINCODE - Add a pincode to track.\n\n/remove PINCODE - Stop tracking a pincode.\n\n/list - List all actively tracking pincodes.'''
     update.message.reply_text(message)
 
 def echo(update, context):
