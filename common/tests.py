@@ -56,7 +56,16 @@ def dummy_get_calendar_by_pin_response():
 
 @pytest.fixture
 def dummy_generate_message_response():
-	return '''Pincode: 413608\nCentre Name: District General Hostpital\nFrom: 09:00:00\nTo: 18:00:00\n\nSessions/ Slots: \nMax Age Limit: 18\nAvailable Capacity: 50\nVaccine: COVISHIELD\nSlots Available In: FORENOON, AFTERNOON'''
+	return '''x--------------------------------------------------x
+Pincode: 413608
+
+* Centre Name: District General Hostpital
+Sessions/ Slots:
+ -> Min Age Limit: 18 yrs
+ -> Available Capacity: 50
+ -> Vaccine: COVISHIELD
+ -> Slots Available In: FORENOON, AFTERNOON
+x--------------------------------------------------x'''
 
 def test_telegram_bot(dummy_generate_message_response, tester_chat_id):
 	tb = TelegramBot(os.getenv("TELEGRAM_BOT_KEY"))

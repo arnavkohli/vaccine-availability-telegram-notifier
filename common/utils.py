@@ -35,28 +35,32 @@ def get_calendar_by_pin(pincode: int, date: str) -> dict:
 
 def generate_message(data: dict):
 	message = ""
+	x_line = "x" + "-"*50 + "x"
 	centers = data.get("centers", [])
-	for center in centers:
-		available = False
-		message += f"Pincode: {center.get('pincode')}\n"
-		message += f"Centre Name: {center.get('name')}\n"
-		message += f"From: {center.get('from')}\n"
-		message += f"To: {center.get('to')}\n\n"
+	for c_index, center in enumerate(centers):
+		if c_index == 0:
+			message += f"{x_line}\nPincode: {center.get('pincode')}\n\n"
+		message += f"* Centre Name: {center.get('name')}\n"
+		# message += f"From: {center.get('from')}\n"
+		# message += f"To: {center.get('to')}\n\n"
 
+		available = False
 		for index, session in enumerate(center.get('sessions', [])):
 			if session.get('available_capacity') == 0:
 				continue
 			available = True
 			if index == 0:
-				message += f"Sessions/ Slots: \n"
-			message += f"Min Age Limit: {session.get('min_age_limit')}\n"
-			message += f"Available Capacity: {session.get('available_capacity')}\n"
-			message += f"Vaccine: {session.get('vaccine')}\n"
-			message += f"Slots Available In: {', '.join(session.get('slots'))}\n"
+				message += f"Sessions/ Slots:\n"
+			message += f" -> Min Age Limit: {session.get('min_age_limit')} yrs\n"
+			message += f" -> Available Capacity: {session.get('available_capacity')}\n"
+			message += f" -> Vaccine: {session.get('vaccine')}\n"
+			message += f" -> Slots Available In: {', '.join(session.get('slots'))}\n\n"
 
 		if not available:
-			message += f"No slots found for {center.get('pincode')}!\n"
-	return message.strip()
+			message += f" -> No slots found!\n\n"
+	message = message.strip()
+	message += f"\n{x_line}"
+	return message
 
 def is_valid_indian_pincode(pincode):
     regex = "^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$"
