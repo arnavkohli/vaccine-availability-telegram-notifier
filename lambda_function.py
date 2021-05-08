@@ -11,7 +11,9 @@ def lambda_handler(event, context):
 			mongo_conn_url = os.getenv("MONGO_CONN_URL"),
 			database = os.getenv("DATABASE"),
 			users_collection = os.getenv("USER_COLLECTION"),
-			groups_collection = os.getenv("GROUP_COLLECTION")
+			groups_collection = os.getenv("GROUP_COLLECTION"),
+			vip=False,
+			notify_on_unavailability=True
 	    ))
 	    return {
 	        'statusCode': 200,

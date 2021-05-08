@@ -78,9 +78,9 @@ def addPincode(update, context):
         data = insert_update_request(first_name, last_name, telegram_user_id, telegram_username, chat_id, pincodes)
         print ("data", data)
         if data:
-            user_data = data.get('user_data').replace("null", "None")
+            user_data = eval(data.get('user_data').replace("null", "None").replace("true", "True").replace("false", "False"))
             print ("user_data", eval(user_data))
-            pincodes = eval(user_data).get('pincodes')
+            pincodes = user_data.get('pincodes')
             print ("pincodes", pincodes)
             if not pincodes or pincodes == "null":
                 update.message.reply_text(f"You have not added any pincodes!")
@@ -110,9 +110,9 @@ def removePincode(update, context):
         data = delete_request(telegram_user_id, pincodes)
         print ("data", data)
         if data:
-            user_data = data.get('user_data').replace("null", "None")
+            user_data = eval(data.get('user_data').replace("null", "None").replace("true", "True").replace("false", "False"))
             print ("user_data", user_data)
-            pincodes = eval(user_data).get('pincodes')
+            pincodes = user_data.get('pincodes')
             print ("pincodes", pincodes)
             if not pincodes or pincodes == 'null':
                 update.message.reply_text(f"You have not added any pincodes!")
@@ -137,7 +137,7 @@ def listPincodes(update, context):
     data = list_request(telegram_user_id)
     print ("data", data)
     if data and data != 'null':
-        user_data = eval(data.get("user").replace("null", "None"))
+        user_data = eval(data.get("user").replace("null", "None").replace("true", "True").replace("false", "False"))
         print ("user_data", user_data)
         pincodes = user_data.get('pincodes')
         print ("pincodes", pincodes)

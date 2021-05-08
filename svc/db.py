@@ -1,6 +1,4 @@
 import pymongo, json
-from bson.objectid import ObjectId
-from bson.json_util import dumps, loads
 
 def handle_db_exception(func):
 	def wrapper(*args, **kwargs):
