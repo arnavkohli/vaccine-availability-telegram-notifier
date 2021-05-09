@@ -22,20 +22,39 @@ def timeit(func):
 
 async def process_batch(db, users_collection, session, date, group, vip=False):
 	pincode = group.get('pincode')
+	user_ids = group.get("user_ids")
+
+	if not user_ids:
+		print (f"[Scheduler] No user_ids found for pincode {pincode}. Skipping...")
+		return []
+
+	chat_ids = []
 	if not vip:
-		try:
-			chat_ids = [db.search(collection=users_collection, filters={"_id" : user_id}).get('chat_id') for user_id in group.get('user_ids')]
-		except :
-			print (f"[Scheduler] No user_ids found for pincode {pincode}. Skipping...")
-			return []
+		for user_id in group.get("user_ids"):
+			try:
+				user = db.search(collection=users_collection, filters={"_id" : user_id})
+				if user:
+					chat_ids.append(user.get("chat_id"))
+			except:
+				pass
 	else:
-		try:
-			chat_ids = [db.search(collection=users_collection, filters={"_id" : user_id, "vip" : True}).get('chat_id') for user_id in group.get('user_ids')]
-		except:
+		for user_id in group.get("user_ids"):
+			try:
+				user = db.search(collection=users_collection, filters={"_id" : user_id, "vip" : True})
+				if user:
+					chat_ids.append(user.get("chat_id"))
+			except:
+				pass
+
+	if not chat_ids:
+		if not vip:
+			print (f"[Scheduler] No user_ids found for pincode {pincode}. Skipping...")
+		else:
 			print (f"[Scheduler] No VIP user_ids found for pincode {pincode}. Skipping...")
-			return []
+		return []
 
 	response, data = await async_get_calendar_by_pin(session, pincode, date)
+	status = "unavailable"
 	if response == 200:
 		print (f"[Scheduler] SLOTS FOUND for {pincode}. Checking availability...")
 		message, status = generate_message(data)
@@ -69,7 +88,7 @@ async def run(telegram_bot_key: str, mongo_conn_url: str, database: str, users_c
 	groups = db.search(collection=groups_collection, all=True)
 
 	valid_groups = [group for group in groups if is_valid_indian_pincode(group.get('pincode'))]
-	
+
 	today = datetime.strftime(datetime.now(), "%d-%m-%Y")
 	async with aiohttp.ClientSession() as session:
 		tasks = []

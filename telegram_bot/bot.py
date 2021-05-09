@@ -79,7 +79,7 @@ def addPincode(update, context):
         print ("data", data)
         if data:
             user_data = eval(data.get('user_data').replace("null", "None").replace("true", "True").replace("false", "False"))
-            print ("user_data", eval(user_data))
+            print ("user_data", user_data)
             pincodes = user_data.get('pincodes')
             print ("pincodes", pincodes)
             if not pincodes or pincodes == "null":
